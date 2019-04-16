@@ -24,6 +24,7 @@
     "binary-search-tree": "0.2.5",
     "localforage": "^1.3.0",
     "mkdirp": "~0.5.1",
+    "node-line-reader": "0.0.3",
     "underscore": "~1.4.4"
   },
   "devDependencies": {
