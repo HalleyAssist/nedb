@@ -21,7 +21,7 @@
   },
   "dependencies": {
     "async": "0.2.10",
-    "binary-search-tree": "https://github.com/HalleyAssist/node-binary-search-tree-continued.git",
+    "binary-search-tree-continued": "https://github.com/HalleyAssist/node-binary-search-tree-continued.git",
     "localforage": "^1.3.0",
     "mkdirp": "~0.5.1",
     "node-line-reader": "0.0.3",
