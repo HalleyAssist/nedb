@@ -11,6 +11,8 @@ pids
 logs
 results
 
+yarn.lock
+
 npm-debug.log
 workspace
 node_modules
