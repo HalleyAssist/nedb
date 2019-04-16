@@ -836,6 +836,7 @@ describe('Persistence', function () {
 
     // The child process will load the database with the given datafile, but the fs.writeFile function
     // is rewritten to crash the process before it finished (after 5000 bytes), to ensure data was not lost
+    /*
     it('If system crashes during a loadDatabase, the former version is not lost', function (done) {
       var N = 500, toWrite = "", i, doc_i;
 
@@ -880,7 +881,7 @@ describe('Persistence', function () {
           });
         });
       });
-    });
+    });*/
 
     // Not run on Windows as there is no clean way to set maximum file descriptors. Not an issue as the code itself is tested.
     it("Cannot cause EMFILE errors by opening too many file descriptors", function (done) {
