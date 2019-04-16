@@ -39,7 +39,7 @@ describe('Database', function () {
     db.find({}, function(err, docs) {
       assert.isNull(err, 'There were no errors');
       assert.isNotNull(docs, 'A result was returned');
-      assert.isAbove(docs.length, 1, 'Some results exist');
+      assert.isAbove(docs.length, 0, 'Some results exist');
       assert.isDefined(docs[0].somedata, 'somedata has been defined');
       docs[0].somedata.should.equal('ok');  
       db.closeDatabase(function(err) {
