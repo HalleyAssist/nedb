@@ -845,7 +845,7 @@ describe('Persistence', function () {
       if (fs.existsSync('workspace/lac.db~')) { fs.unlinkSync('workspace/lac.db~'); }
 
       // Creating a db file with 150k records (a bit long to load)
-      for (i = 0; i < N; i += 1) {
+      for (i = 0; i < N; i ++) {
         toWrite += model.serialize({ _id: 'anid_' + i, hello: 'world' }) + '\n';
       }
       fs.writeFileSync('workspace/lac.db', toWrite, 'utf8');
@@ -872,7 +872,7 @@ describe('Persistence', function () {
 
           db.find({}, function (err, docs) {
             docs.length.should.equal(N);
-            for (i = 0; i < N; i += 1) {
+            for (i = 0; i < N; i ++) {
               doc_i = _.find(docs, function (d) { return d._id === 'anid_' + i; });
               assert.isDefined(doc_i);
               assert.deepEqual({ hello: 'world', _id: 'anid_' + i }, doc_i);

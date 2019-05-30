@@ -35,7 +35,7 @@ async.waterfall([
 
     profiler.step('Begin calling ensureIndex ' + n + ' times');
 
-    for (i = 0; i < n; i += 1) {
+    for (i = 0; i < n; i ++) {
       d.ensureIndex({ fieldName: 'docNumber' });
       delete d.indexes.docNumber;
     }

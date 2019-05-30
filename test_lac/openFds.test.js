@@ -11,7 +11,7 @@ function multipleOpen (filename, N, callback) {
   async.whilst( function () { return i < N; }
               , function (cb) {
                 fs.open(filename, 'r', function (err, fd) {
-                  i += 1;
+                  i ++;
                   if (fd) { fds.push(fd); }
                   return cb(err);
                 });
@@ -51,7 +51,7 @@ async.waterfall([
                     , function (cb) {
                         db.persistence.persistCachedDatabase(function (err) {
                           if (err) { return cb(err); }
-                          i += 1;
+                          i ++;
                           return cb();
                         });
                       }

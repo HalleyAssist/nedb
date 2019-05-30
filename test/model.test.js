@@ -961,7 +961,7 @@ describe('Model', function () {
           , i, j
           ;
 
-        for (i = 0; i < toTest.length; i += 1) {
+        for (i = 0; i < toTest.length; i ++) {
           for (j = 0; j < toTestAgainst.length; j += 1) {
             model.areThingsEqual(toTest[i], toTestAgainst[j]).should.equal(i === j);
           }
@@ -974,7 +974,7 @@ describe('Model', function () {
           , i
           ;
 
-        for (i = 0; i < toTest.length; i += 1) {
+        for (i = 0; i < toTest.length; i ++) {
           model.areThingsEqual(toTest[i], toTestAgainst[i]).should.equal(false);
         }
       });
@@ -984,7 +984,7 @@ describe('Model', function () {
           , i
           ;
 
-        for (i = 0; i < toTestAgainst.length; i += 1) {
+        for (i = 0; i < toTestAgainst.length; i ++) {
           model.areThingsEqual([1, 2, 3], toTestAgainst[i]).should.equal(false);
           model.areThingsEqual(toTestAgainst[i], []).should.equal(false);
 

@@ -11,7 +11,7 @@ function someInserts (sn, N, callback) {
   var i = 0, beg = Date.now();
   async.whilst( function () { return i < N; }
               , function (_cb) {
-                  db.insert({ data: Math.random() }, function (err) { i += 1; return _cb(err); });
+                  db.insert({ data: Math.random() }, function (err) { i ++; return _cb(err); });
                 }
               , function (err) {
                   console.log("Inserts, series " + sn + " " + (Date.now() - beg));
@@ -22,7 +22,7 @@ function someInserts (sn, N, callback) {
 // Manually updating the localStorage on the same variable
 function someLS (sn, N, callback) {
   var i = 0, beg = Date.now();
-  for (i = 0; i < N; i += 1) {
+  for (i = 0; i < N; i ++) {
     localStorage.setItem('loadTestLS', getItem('loadTestLS') + sample);
   }
   console.log("localStorage, series " + sn + " " + (Date.now() - beg));
@@ -32,7 +32,7 @@ function someLS (sn, N, callback) {
 // Manually updating the localStorage on different variables
 function someLSDiff (sn, N, callback) {
   var i = 0, beg = Date.now();
-  for (i = 0; i < N; i += 1) {
+  for (i = 0; i < N; i ++) {
     localStorage.setItem('loadTestLS-' + i, sample);
   }
   console.log("localStorage, series " + sn + " " + (Date.now() - beg));
@@ -46,7 +46,7 @@ function someLF (sn, N, callback) {
               , function (_cb) {
                   localforage.getItem('loadTestLF', function (err, value) {
                     if (err) { return _cb(err); }
-                    localforage.setItem('loadTestLF', value + sample, function (err) { i += 1; return _cb(err); });
+                    localforage.setItem('loadTestLF', value + sample, function (err) { i ++; return _cb(err); });
                   });
                 }
               , function (err) {
@@ -60,7 +60,7 @@ function someLFDiff (sn, N, callback) {
   var i = 0, beg = Date.now();
   async.whilst( function () { return i < N; }
               , function (_cb) {
-                  localforage.setItem('loadTestLF-' + i, sample, function (err) { i += 1; return _cb(err); });
+                  localforage.setItem('loadTestLF-' + i, sample, function (err) { i ++; return _cb(err); });
                 }
               , function (err) {
                   console.log("localForage/IDB, series " + sn + " " + (Date.now() - beg));

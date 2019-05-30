@@ -174,7 +174,7 @@ describe('Cursor', function () {
       cursor.exec(function (err, docs) {
         assert.isNull(err);
         // Results are in ascending order
-        for (i = 0; i < docs.length - 1; i += 1) {
+        for (i = 0; i < docs.length - 1; i ++) {
           assert(docs[i].age < docs[i + 1].age)
         }
 
@@ -182,7 +182,7 @@ describe('Cursor', function () {
         cursor.exec(function (err, docs) {
           assert.isNull(err);
           // Results are in descending order
-          for (i = 0; i < docs.length - 1; i += 1) {
+          for (i = 0; i < docs.length - 1; i ++) {
             assert(docs[i].age > docs[i + 1].age)
           }
 
@@ -241,7 +241,7 @@ describe('Cursor', function () {
           cursor.sort({ age: 1 }).exec(function (err, docs) {
             assert.isNull(err);
             // Results are in ascending order
-            for (i = 0; i < docs.length - 1; i += 1) {
+            for (i = 0; i < docs.length - 1; i ++) {
               assert(docs[i].age < docs[i + 1].age)
             }
             cb();
@@ -252,7 +252,7 @@ describe('Cursor', function () {
     cursor.sort({ age: -1 }).exec(function (err, docs) {
       assert.isNull(err);
       // Results are in descending order
-      for (i = 0; i < docs.length - 1; i += 1) {
+      for (i = 0; i < docs.length - 1; i ++) {
         assert(docs[i].age > docs[i + 1].age)
       }
       cb();

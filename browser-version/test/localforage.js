@@ -1173,7 +1173,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	            }
 	            var BlobBuilder = globalObject.BlobBuilder || globalObject.MSBlobBuilder || globalObject.MozBlobBuilder || globalObject.WebKitBlobBuilder;
 	            var builder = new BlobBuilder();
-	            for (var i = 0; i < parts.length; i += 1) {
+	            for (var i = 0; i < parts.length; i ++) {
 	                builder.append(parts[i]);
 	            }
 	            return builder.getBlob(properties.type);
@@ -2180,7 +2180,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	            var BlobBuilder = globalObject.BlobBuilder || globalObject.MSBlobBuilder || globalObject.MozBlobBuilder || globalObject.WebKitBlobBuilder;
 
 	            var builder = new BlobBuilder();
-	            for (var i = 0; i < parts.length; i += 1) {
+	            for (var i = 0; i < parts.length; i ++) {
 	                builder.append(parts[i]);
 	            }
 

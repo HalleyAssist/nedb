@@ -26,7 +26,7 @@ function testThrowInCallback (d, done) {
     process.nextTick(function () {
       d.insert({ bar: 1 }, function (err) {
         process.removeAllListeners('uncaughtException');
-        for (var i = 0; i < currentUncaughtExceptionHandlers.length; i += 1) {
+        for (var i = 0; i < currentUncaughtExceptionHandlers.length; i ++) {
           process.on('uncaughtException', currentUncaughtExceptionHandlers[i]);
         }
 
@@ -83,7 +83,7 @@ function testRightOrder (d, done) {
                 docs[0].a.should.equal(3);
 
                 process.removeAllListeners('uncaughtException');
-                for (var i = 0; i < currentUncaughtExceptionHandlers.length; i += 1) {
+                for (var i = 0; i < currentUncaughtExceptionHandlers.length; i ++) {
                   process.on('uncaughtException', currentUncaughtExceptionHandlers[i]);
                 }
 

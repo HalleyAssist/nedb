@@ -71,7 +71,7 @@ function getRandomArray (n) {
     , i, j, temp
     ;
 
-  for (i = 0; i < n; i += 1) { res[i] = i; }
+  for (i = 0; i < n; i ++) { res[i] = i; }
 
   for (i = n - 1; i >= 1; i -= 1) {
     j = Math.floor((i + 1) * Math.random());
@@ -153,7 +153,7 @@ module.exports.findDocsWithIn = function (d, n, profiler, cb) {
     ;
 
   // Preparing all the $in arrays, will take some time
-  for (i = 0; i < n; i += 1) {
+  for (i = 0; i < n; i ++) {
     ins[i] = [];
 
     for (j = 0; j < arraySize; j += 1) {

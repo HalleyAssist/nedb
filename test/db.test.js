@@ -410,7 +410,7 @@ describe('Database', function () {
       process.on('uncaughtException', function MINE (ex) {
         process.removeAllListeners('uncaughtException');
 
-        for (i = 0; i < currentUncaughtExceptionHandlers.length; i += 1) {
+        for (i = 0; i < currentUncaughtExceptionHandlers.length; i ++) {
           process.on('uncaughtException', currentUncaughtExceptionHandlers[i]);
         }
 

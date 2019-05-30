@@ -912,7 +912,7 @@ Cursor.prototype._exec = function(_callback) {
     if (err) { return callback(err); }
 
     try {
-      for (i = 0; i < candidates.length; i += 1) {
+      for (i = 0; i < candidates.length; i ++) {
         if (model.match(candidates[i], self.query)) {
           // If a sort is defined, wait for the results to be sorted before applying limit and skip
           if (!self._sort) {
@@ -1240,7 +1240,7 @@ Datastore.prototype.addToIndexes = function (doc) {
     , keys = Object.keys(this.indexes)
     ;
 
-  for (i = 0; i < keys.length; i += 1) {
+  for (i = 0; i < keys.length; i ++) {
     try {
       this.indexes[keys[i]].insert(doc);
     } catch (e) {
@@ -1252,7 +1252,7 @@ Datastore.prototype.addToIndexes = function (doc) {
 
   // If an error happened, we need to rollback the insert on all other indexes
   if (error) {
-    for (i = 0; i < failingIndex; i += 1) {
+    for (i = 0; i < failingIndex; i ++) {
       this.indexes[keys[i]].remove(doc);
     }
 
@@ -1283,7 +1283,7 @@ Datastore.prototype.updateIndexes = function (oldDoc, newDoc) {
     , keys = Object.keys(this.indexes)
     ;
 
-  for (i = 0; i < keys.length; i += 1) {
+  for (i = 0; i < keys.length; i ++) {
     try {
       this.indexes[keys[i]].update(oldDoc, newDoc);
     } catch (e) {
@@ -1295,7 +1295,7 @@ Datastore.prototype.updateIndexes = function (oldDoc, newDoc) {
 
   // If an error happened, we need to rollback the update on all other indexes
   if (error) {
-    for (i = 0; i < failingIndex; i += 1) {
+    for (i = 0; i < failingIndex; i ++) {
       this.indexes[keys[i]].revertUpdate(oldDoc, newDoc);
     }
 
@@ -1477,7 +1477,7 @@ Datastore.prototype._insertInCache = function (preparedDoc) {
 Datastore.prototype._insertMultipleDocsInCache = function (preparedDocs) {
   var i, failingI, error;
 
-  for (i = 0; i < preparedDocs.length; i += 1) {
+  for (i = 0; i < preparedDocs.length; i ++) {
     try {
       this.addToIndexes(preparedDocs[i]);
     } catch (e) {
@@ -1488,7 +1488,7 @@ Datastore.prototype._insertMultipleDocsInCache = function (preparedDocs) {
   }
 
   if (error) {
-    for (i = 0; i < failingI; i += 1) {
+    for (i = 0; i < failingI; i ++) {
       this.removeFromIndexes(preparedDocs[i]);
     }
 
@@ -1544,7 +1544,7 @@ Datastore.prototype.find = function (query, projection, callback) {
 
     if (err) { return callback(err); }
 
-    for (i = 0; i < docs.length; i += 1) {
+    for (i = 0; i < docs.length; i ++) {
       res.push(model.deepCopy(docs[i]));
     }
     return callback(null, res);
@@ -1677,7 +1677,7 @@ Datastore.prototype._update = function (query, updateQuery, options, cb) {
       // Preparing update (if an error is thrown here neither the datafile nor
       // the in-memory indexes are affected)
       try {
-        for (i = 0; i < candidates.length; i += 1) {
+        for (i = 0; i < candidates.length; i ++) {
           if (model.match(candidates[i], query) && (multi || numReplaced === 0)) {
             numReplaced += 1;
             if (self.timestampData) { createdAt = candidates[i].createdAt; }
@@ -1786,7 +1786,7 @@ function Executor () {
     var newArguments = [];
 
     // task.arguments is an array-like object on which adding a new field doesn't work, so we transform it into a real array
-    for (var i = 0; i < task.arguments.length; i += 1) { newArguments.push(task.arguments[i]); }
+    for (var i = 0; i < task.arguments.length; i ++) { newArguments.push(task.arguments[i]); }
     var lastArg = task.arguments[task.arguments.length - 1];
 
     // Always tell the queue task is complete. Execute callback if any was given.
@@ -1840,7 +1840,7 @@ Executor.prototype.push = function (task, forceQueuing) {
 Executor.prototype.processBuffer = function () {
   var i;
   this.ready = true;
-  for (i = 0; i < this.buffer.length; i += 1) { this.queue.push(this.buffer[i]); }
+  for (i = 0; i < this.buffer.length; i ++) { this.queue.push(this.buffer[i]); }
   this.buffer = [];
 };
 
@@ -1931,7 +1931,7 @@ Index.prototype.insert = function (doc) {
     // If an insert fails due to a unique constraint, roll back all inserts before it
     keys = _.uniq(key, projectForUnique);
 
-    for (i = 0; i < keys.length; i += 1) {
+    for (i = 0; i < keys.length; i ++) {
       try {
         this.tree.insert(keys[i], doc);
       } catch (e) {
@@ -1942,7 +1942,7 @@ Index.prototype.insert = function (doc) {
     }
 
     if (error) {
-      for (i = 0; i < failingI; i += 1) {
+      for (i = 0; i < failingI; i ++) {
         this.tree.delete(keys[i], doc);
       }
 
@@ -1961,7 +1961,7 @@ Index.prototype.insert = function (doc) {
 Index.prototype.insertMultipleDocs = function (docs) {
   var i, error, failingI;
 
-  for (i = 0; i < docs.length; i += 1) {
+  for (i = 0; i < docs.length; i ++) {
     try {
       this.insert(docs[i]);
     } catch (e) {
@@ -1972,7 +1972,7 @@ Index.prototype.insertMultipleDocs = function (docs) {
   }
 
   if (error) {
-    for (i = 0; i < failingI; i += 1) {
+    for (i = 0; i < failingI; i ++) {
       this.remove(docs[i]);
     }
 
@@ -2036,11 +2036,11 @@ Index.prototype.update = function (oldDoc, newDoc) {
 Index.prototype.updateMultipleDocs = function (pairs) {
   var i, failingI, error;
 
-  for (i = 0; i < pairs.length; i += 1) {
+  for (i = 0; i < pairs.length; i ++) {
     this.remove(pairs[i].oldDoc);
   }
 
-  for (i = 0; i < pairs.length; i += 1) {
+  for (i = 0; i < pairs.length; i ++) {
     try {
       this.insert(pairs[i].newDoc);
     } catch (e) {
@@ -2052,11 +2052,11 @@ Index.prototype.updateMultipleDocs = function (pairs) {
 
   // If an error was raised, roll back changes in the inverse order
   if (error) {
-    for (i = 0; i < failingI; i += 1) {
+    for (i = 0; i < failingI; i ++) {
       this.remove(pairs[i].newDoc);
     }
 
-    for (i = 0; i < pairs.length; i += 1) {
+    for (i = 0; i < pairs.length; i ++) {
       this.insert(pairs[i].oldDoc);
     }
 
@@ -2131,7 +2131,7 @@ Index.prototype.getAll = function () {
   this.tree.executeOnEveryNode(function (node) {
     var i;
 
-    for (i = 0; i < node.data.length; i += 1) {
+    for (i = 0; i < node.data.length; i ++) {
       res.push(node.data[i]);
     }
   });
@@ -2313,7 +2313,7 @@ function compareNSB (a, b) {
 function compareArrays (a, b) {
   var i, comp;
 
-  for (i = 0; i < Math.min(a.length, b.length); i += 1) {
+  for (i = 0; i < Math.min(a.length, b.length); i ++) {
     comp = compareThings(a[i], b[i]);
 
     if (comp !== 0) { return comp; }
@@ -2370,7 +2370,7 @@ function compareThings (a, b, _compareStrings) {
   aKeys = Object.keys(a).sort();
   bKeys = Object.keys(b).sort();
 
-  for (i = 0; i < Math.min(aKeys.length, bKeys.length); i += 1) {
+  for (i = 0; i < Math.min(aKeys.length, bKeys.length); i ++) {
     comp = compareThings(a[aKeys[i]], b[bKeys[i]]);
 
     if (comp !== 0) { return comp; }
@@ -2657,7 +2657,7 @@ function getDotValue (obj, field) {
 
     // Return the array of values
     objs = new Array();
-    for (i = 0; i < obj[fieldParts[0]].length; i += 1) {
+    for (i = 0; i < obj[fieldParts[0]].length; i ++) {
        objs.push(getDotValue(obj[fieldParts[0]][i], fieldParts.slice(1)));
     }
     return objs;
@@ -2697,7 +2697,7 @@ function areThingsEqual (a, b) {
   }
 
   if (aKeys.length !== bKeys.length) { return false; }
-  for (i = 0; i < aKeys.length; i += 1) {
+  for (i = 0; i < aKeys.length; i ++) {
     if (bKeys.indexOf(aKeys[i]) === -1) { return false; }
     if (!areThingsEqual(a[aKeys[i]], b[aKeys[i]])) { return false; }
   }
@@ -2751,7 +2751,7 @@ comparisonFunctions.$in = function (a, b) {
 
   if (!util.isArray(b)) { throw new Error("$in operator called with a non-array"); }
 
-  for (i = 0; i < b.length; i += 1) {
+  for (i = 0; i < b.length; i ++) {
     if (areThingsEqual(a, b[i])) { return true; }
   }
 
@@ -2821,7 +2821,7 @@ logicalOperators.$or = function (obj, query) {
 
   if (!util.isArray(query)) { throw new Error("$or operator used without an array"); }
 
-  for (i = 0; i < query.length; i += 1) {
+  for (i = 0; i < query.length; i ++) {
     if (match(obj, query[i])) { return true; }
   }
 
@@ -2839,7 +2839,7 @@ logicalOperators.$and = function (obj, query) {
 
   if (!util.isArray(query)) { throw new Error("$and operator used without an array"); }
 
-  for (i = 0; i < query.length; i += 1) {
+  for (i = 0; i < query.length; i ++) {
     if (!match(obj, query[i])) { return false; }
   }
 
@@ -2891,7 +2891,7 @@ function match (obj, query) {
 
   // Normal query
   queryKeys = Object.keys(query);
-  for (i = 0; i < queryKeys.length; i += 1) {
+  for (i = 0; i < queryKeys.length; i ++) {
     queryKey = queryKeys[i];
     queryValue = query[queryKey];
 
@@ -2925,13 +2925,13 @@ function matchQueryPart (obj, queryKey, queryValue, treatObjAsValue) {
     // Check if we are using an array-specific comparison function
     if (queryValue !== null && typeof queryValue === 'object' && !util.isRegExp(queryValue)) {
       keys = Object.keys(queryValue);
-      for (i = 0; i < keys.length; i += 1) {
+      for (i = 0; i < keys.length; i ++) {
         if (arrayComparisonFunctions[keys[i]]) { return matchQueryPart(obj, queryKey, queryValue, true); }
       }
     }
 
     // If not, treat it as an array of { obj, query } where there needs to be at least one match
-    for (i = 0; i < objValue.length; i += 1) {
+    for (i = 0; i < objValue.length; i ++) {
       if (matchQueryPart({ k: objValue[i] }, 'k', queryValue)) { return true; }   // k here could be any string
     }
     return false;
@@ -2950,7 +2950,7 @@ function matchQueryPart (obj, queryKey, queryValue, treatObjAsValue) {
 
     // queryValue is an object of this form: { $comparisonOperator1: value1, ... }
     if (dollarFirstChars.length > 0) {
-      for (i = 0; i < keys.length; i += 1) {
+      for (i = 0; i < keys.length; i ++) {
         if (!comparisonFunctions[keys[i]]) { throw new Error("Unknown comparison function " + keys[i]); }
 
         if (!comparisonFunctions[keys[i]](objValue, queryValue[keys[i]])) { return false; }
@@ -3026,7 +3026,7 @@ function Persistence (options) {
   }
   this.afterSerialization = options.afterSerialization || function (s) { return s; };
   this.beforeDeserialization = options.beforeDeserialization || function (s) { return s; };
-  for (i = 1; i < 30; i += 1) {
+  for (i = 1; i < 30; i ++) {
     for (j = 0; j < 10; j += 1) {
       randomString = customUtils.uid(i);
       if (this.beforeDeserialization(this.afterSerialization(randomString)) !== randomString) {
@@ -3201,7 +3201,7 @@ Persistence.prototype.treatRawData = function (rawData) {
     , corruptItems = -1   // Last line of every data file is usually blank so not really corrupt
     ;
 
-  for (i = 0; i < data.length; i += 1) {
+  for (i = 0; i < data.length; i ++) {
     var doc;
 
     try {
@@ -3429,7 +3429,7 @@ var process=require("__browserify_process");/*global setImmediate: false, setTim
         if (arr.forEach) {
             return arr.forEach(iterator);
         }
-        for (var i = 0; i < arr.length; i += 1) {
+        for (var i = 0; i < arr.length; i ++) {
             iterator(arr[i], i, arr);
         }
     };
@@ -3805,7 +3805,7 @@ var process=require("__browserify_process");/*global setImmediate: false, setTim
             listeners.unshift(fn);
         };
         var removeListener = function (fn) {
-            for (var i = 0; i < listeners.length; i += 1) {
+            for (var i = 0; i < listeners.length; i ++) {
                 if (listeners[i] === fn) {
                     listeners.splice(i, 1);
                     return;
@@ -5151,7 +5151,7 @@ BinarySearchTree.prototype.getUpperBoundMatcher = function (query) {
 function append (array, toAppend) {
   var i;
 
-  for (i = 0; i < toAppend.length; i += 1) {
+  for (i = 0; i < toAppend.length; i ++) {
     array.push(toAppend[i]);
   }
 }
@@ -6603,7 +6603,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	            }
 	            var BlobBuilder = globalObject.BlobBuilder || globalObject.MSBlobBuilder || globalObject.MozBlobBuilder || globalObject.WebKitBlobBuilder;
 	            var builder = new BlobBuilder();
-	            for (var i = 0; i < parts.length; i += 1) {
+	            for (var i = 0; i < parts.length; i ++) {
 	                builder.append(parts[i]);
 	            }
 	            return builder.getBlob(properties.type);
@@ -7610,7 +7610,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	            var BlobBuilder = globalObject.BlobBuilder || globalObject.MSBlobBuilder || globalObject.MozBlobBuilder || globalObject.WebKitBlobBuilder;
 
 	            var builder = new BlobBuilder();
-	            for (var i = 0; i < parts.length; i += 1) {
+	            for (var i = 0; i < parts.length; i ++) {
 	                builder.append(parts[i]);
 	            }
 
