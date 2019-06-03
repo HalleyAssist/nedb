@@ -15,7 +15,7 @@ var should = require('chai').should()
 describe('Database', function () {
   var d;
 
-  beforeEach(function (done) {
+  beforeEach(async function (done) {
     d = new Datastore({ filename: testDb });
     d.filename.should.equal(testDb);
     d.inMemoryOnly.should.equal(false);
