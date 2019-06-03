@@ -18,7 +18,7 @@ var should = require('chai').should()
 describe('Persistence', function () {
   var d;
 
-  beforeEach(async function (done) {
+  beforeEach(function (done) {
     if(d){
       let _resolve
       const p = new Promise((resolve)=>_resolve = resolve)
