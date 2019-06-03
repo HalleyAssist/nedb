@@ -19,14 +19,6 @@ describe('Persistence', function () {
   var d;
 
   beforeEach(function (done) {
-    if(d){
-      let _resolve
-      const p = new Promise((resolve)=>_resolve = resolve)
-      d.closeDatabase(function(){
-        _resolve()
-      })
-      await p
-    }
     d = new Datastore({ filename: testDb });
     d.filename.should.equal(testDb);
     d.inMemoryOnly.should.equal(false);
