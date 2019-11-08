@@ -311,8 +311,11 @@ describe('Persistence', function () {
 
 
   describe('Serialization hooks', function () {
-    var as = function (s) { return "before_" + s + "_after"; }
-      , bd = function (s) { return s.substring(7, s.length - 6); }
+    var as = function (s) { return "before_" + model.serialize(s) + "_after"; }
+      , bd = function (s) { 
+        s =  s.substring(7, s.length - 6); 
+        return model.deserialize(s)
+      }
 
     it("Declaring only one hook will throw an exception to prevent data loss", function (done) {
       var hookTestFilename = 'workspace/hookTest.db'
@@ -380,7 +383,6 @@ describe('Persistence', function () {
           data[0].substring(0, 7).should.equal('before_');
           data[0].substring(data[0].length - 6).should.equal('_after');
 
-          doc0 = model.deserialize(doc0);
           Object.keys(doc0).length.should.equal(2);
           doc0.hello.should.equal('world');
 
@@ -398,11 +400,9 @@ describe('Persistence', function () {
             data[1].substring(0, 7).should.equal('before_');
             data[1].substring(data[1].length - 6).should.equal('_after');
 
-            doc0 = model.deserialize(doc0);
             Object.keys(doc0).length.should.equal(2);
             doc0.hello.should.equal('world');
 
-            doc1 = model.deserialize(doc1);
             Object.keys(doc1).length.should.equal(2);
             doc1.p.should.equal('Mars');
 
@@ -421,15 +421,12 @@ describe('Persistence', function () {
               data[1].substring(0, 7).should.equal('before_');
               data[1].substring(data[1].length - 6).should.equal('_after');
 
-              doc0 = model.deserialize(doc0);
               Object.keys(doc0).length.should.equal(2);
               doc0.hello.should.equal('world');
 
-              doc1 = model.deserialize(doc1);
               Object.keys(doc1).length.should.equal(2);
               doc1.p.should.equal('Mars');
 
-              idx = model.deserialize(idx);
               assert.deepEqual(idx, { '$$indexCreated': { fieldName: 'idefix' } });
 
               done();
@@ -461,18 +458,15 @@ describe('Persistence', function () {
 
               data.length.should.equal(4);
 
-              doc0 = model.deserialize(doc0);
               Object.keys(doc0).length.should.equal(2);
               doc0.hello.should.equal('world');
 
-              doc1 = model.deserialize(doc1);
               Object.keys(doc1).length.should.equal(2);
               doc1.hello.should.equal('earth');
 
               doc0._id.should.equal(doc1._id);
               _id = doc0._id;
 
-              idx = model.deserialize(idx);
               assert.deepEqual(idx, { '$$indexCreated': { fieldName: 'idefix' } });
 
               d.persistence.persistCachedDatabase(function () {
@@ -484,13 +478,11 @@ describe('Persistence', function () {
 
                 data.length.should.equal(3);
 
-                doc0 = model.deserialize(doc0);
                 Object.keys(doc0).length.should.equal(2);
                 doc0.hello.should.equal('earth');
 
                 doc0._id.should.equal(_id);
 
-                idx = model.deserialize(idx);
                 assert.deepEqual(idx, { '$$indexCreated': { fieldName: 'idefix', unique: false, sparse: false } });
 
                 done();
