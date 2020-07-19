@@ -95,7 +95,7 @@ describe('Indexes', function () {
         , doc3 = { a: 2, tf: 'bloup' }
         ;
 
-      idx.insert([doc1, doc2, doc3]);
+      idx.insertMultipleDocs([doc1, doc2, doc3]);
       idx.tree.getNumberOfKeys().should.equal(3);
       assert.deepEqual(idx.tree.search('hello'), [doc1]);
       assert.deepEqual(idx.tree.search('world'), [doc2]);
@@ -111,7 +111,7 @@ describe('Indexes', function () {
         ;
 
       try {
-        idx.insert([doc1, doc2, doc2b, doc3]);
+        idx.insertMultipleDocs([doc1, doc2, doc2b, doc3]);
       } catch (e) {
         e.errorType.should.equal('uniqueViolated');
       }
@@ -297,7 +297,7 @@ describe('Indexes', function () {
         , doc3 = { a: 2, tf: 'bloup' }
         ;
 
-      idx.insert([doc1, doc2, doc3]);
+      idx.insertMultipleDocs([doc1, doc2, doc3]);
       idx.tree.getNumberOfKeys().should.equal(3);
       idx.remove([doc1, doc3]);
       idx.tree.getNumberOfKeys().should.equal(1);
@@ -381,7 +381,7 @@ describe('Indexes', function () {
       idx.insert(doc3);
       idx.tree.getNumberOfKeys().should.equal(3);
 
-      idx.update([{ oldDoc: doc1, newDoc: doc1b }, { oldDoc: doc2, newDoc: doc2b }, { oldDoc: doc3, newDoc: doc3b }]);
+      idx.updateMultipleDocs([{ oldDoc: doc1, newDoc: doc1b }, { oldDoc: doc2, newDoc: doc2b }, { oldDoc: doc3, newDoc: doc3b }]);
 
       idx.tree.getNumberOfKeys().should.equal(3);
       idx.getMatching('world').length.should.equal(1);
@@ -410,7 +410,7 @@ describe('Indexes', function () {
       idx.tree.getNumberOfKeys().should.equal(3);
 
       try {
-        idx.update([{ oldDoc: doc1, newDoc: doc1b }, { oldDoc: doc2, newDoc: doc2b }, { oldDoc: doc3, newDoc: doc3b }]);
+        idx.updateMultipleDocs([{ oldDoc: doc1, newDoc: doc1b }, { oldDoc: doc2, newDoc: doc2b }, { oldDoc: doc3, newDoc: doc3b }]);
       } catch (e) {
         e.errorType.should.equal('uniqueViolated');
       }
@@ -424,7 +424,7 @@ describe('Indexes', function () {
       idx.getMatching('bloup')[0].should.equal(doc3);
 
       try {
-        idx.update([{ oldDoc: doc1, newDoc: doc1b }, { oldDoc: doc2, newDoc: doc2b }, { oldDoc: doc3, newDoc: doc3b }]);
+        idx.updateMultipleDocs([{ oldDoc: doc1, newDoc: doc1b }, { oldDoc: doc2, newDoc: doc2b }, { oldDoc: doc3, newDoc: doc3b }]);
       } catch (e) {
         e.errorType.should.equal('uniqueViolated');
       }
@@ -473,7 +473,7 @@ describe('Indexes', function () {
       idx.insert(doc3);
       idx.tree.getNumberOfKeys().should.equal(3);
 
-      idx.update(batchUpdate);
+      idx.updateMultipleDocs(batchUpdate);
 
       idx.tree.getNumberOfKeys().should.equal(3);
       idx.getMatching('world').length.should.equal(1);
