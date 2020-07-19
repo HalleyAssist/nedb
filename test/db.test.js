@@ -2436,7 +2436,7 @@ describe('Database', function () {
               // The same pointers are shared between all indexes
               d.indexes.a.tree.getNumberOfKeys().should.equal(2);
               d.indexes.b.tree.getNumberOfKeys().should.equal(2);
-              // /d.indexes._id.tree.getNumberOfKeys().should.equal(2);
+              //d.indexes._id.tree.getNumberOfKeys().should.equal(2);
               d.indexes.a.getMatching(456)[0].should.equal(d.indexes._id.getMatching(doc1._id)[0]);
               d.indexes.b.getMatching('no')[0].should.equal(d.indexes._id.getMatching(doc1._id)[0]);
               d.indexes.a.getMatching(2)[0].should.equal(d.indexes._id.getMatching(doc2._id)[0]);
