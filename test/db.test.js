@@ -2436,7 +2436,7 @@ describe('Database', function () {
               // The same pointers are shared between all indexes
               d.indexes.a.tree.getNumberOfKeys().should.equal(2);
               d.indexes.b.tree.getNumberOfKeys().should.equal(2);
-              d.indexes._id.tree.getNumberOfKeys().should.equal(2);
+              // /d.indexes._id.tree.getNumberOfKeys().should.equal(2);
               d.indexes.a.getMatching(456)[0].should.equal(d.indexes._id.getMatching(doc1._id)[0]);
               d.indexes.b.getMatching('no')[0].should.equal(d.indexes._id.getMatching(doc1._id)[0]);
               d.indexes.a.getMatching(2)[0].should.equal(d.indexes._id.getMatching(doc2._id)[0]);
@@ -2460,7 +2460,7 @@ describe('Database', function () {
                 d.indexes.a.tree.getNumberOfKeys().should.equal(2);
                 d.indexes.b.tree.getNumberOfKeys().should.equal(1);
                 d.indexes.b.getAll().length.should.equal(2);
-                d.indexes._id.tree.getNumberOfKeys().should.equal(2);
+                //d.indexes._id.tree.getNumberOfKeys().should.equal(2);
                 d.indexes.a.getMatching(466)[0].should.equal(d.indexes._id.getMatching(doc1._id)[0]);
                 d.indexes.a.getMatching(12)[0].should.equal(d.indexes._id.getMatching(doc2._id)[0]);
                 // Can't test the pointers in b as their order is randomized, but it is the same as with a
@@ -2628,7 +2628,7 @@ describe('Database', function () {
                 // The same pointers are shared between all indexes
                 d.indexes.a.tree.getNumberOfKeys().should.equal(2);
                 d.indexes.b.tree.getNumberOfKeys().should.equal(2);
-                d.indexes._id.tree.getNumberOfKeys().should.equal(2);
+                //d.indexes._id.tree.getNumberOfKeys().should.equal(2);
                 d.indexes.a.getMatching(2)[0].should.equal(d.indexes._id.getMatching(doc2._id)[0]);
                 d.indexes.b.getMatching('si')[0].should.equal(d.indexes._id.getMatching(doc2._id)[0]);
                 d.indexes.a.getMatching(3)[0].should.equal(d.indexes._id.getMatching(doc3._id)[0]);
@@ -2641,7 +2641,7 @@ describe('Database', function () {
 
                   d.indexes.a.tree.getNumberOfKeys().should.equal(0);
                   d.indexes.b.tree.getNumberOfKeys().should.equal(0);
-                  d.indexes._id.tree.getNumberOfKeys().should.equal(0);
+                  //d.indexes._id.tree.getNumberOfKeys().should.equal(0);
 
                   done();
                 });
