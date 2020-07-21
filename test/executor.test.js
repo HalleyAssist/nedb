@@ -26,11 +26,13 @@ function testThrowInCallback (d, done) {
     process.nextTick(function () {
       d.insert({ bar: 1 }, function (err) {
         process.removeAllListeners('uncaughtException');
-        for (var i = 0; i < currentUncaughtExceptionHandlers.length; i ++) {
-          process.on('uncaughtException', currentUncaughtExceptionHandlers[i]);
-        }
-
-        done();
+        setImmediate(function(){
+          for (var i = 0; i < currentUncaughtExceptionHandlers.length; i ++) {
+            process.on('uncaughtException', currentUncaughtExceptionHandlers[i]);
+          }
+  
+          done();
+        })
       });
     });
 
