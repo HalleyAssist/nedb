@@ -41,7 +41,7 @@ describe('Indexes', function () {
 
       idx.insert(doc1);
       idx.tree.getNumberOfKeys().should.equal(1);
-      (function () { idx.insert(doc1); }).should.throw();
+      (function () { idx.insert(Object.assign({},doc1)); }).should.throw();
     });
 
     it('Inserting twice for a fieldName the docs dont have with a unique index results in an error thrown', function () {

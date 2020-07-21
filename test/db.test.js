@@ -1546,7 +1546,7 @@ describe('Database', function () {
           d.insert({ a: 'abc' }, function (err, doc3) {
             // With this query, candidates are always returned in the order 4, 5, 'abc' so it's always the last one which fails
             d.update({ a: { $in: [4, 5, 'abc'] } }, { $inc: { a: 10 } }, { multi: true }, function (err) {
-              assert.isDefined(err);
+              assert.isNotNull(err);
 
               // No index modified
               _.each(d.indexes, function (index) {

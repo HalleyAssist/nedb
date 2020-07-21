@@ -278,7 +278,7 @@ describe('Model', function () {
 
     it('With the strictKeys option, only valid keys gets deep copied', function () {
       var a = { a: 4, $e: 'rrr', 'eee.rt': 42, nested: { yes: 1, 'tt.yy': 2, $nopenope: 3 }, array: [{ 'rr.hh': 1 }, { yes: true }, { $yes: false }] }
-        , b = model.deepCopy(a, true)
+        , b = model.deepCopyStrictKeys(a)
       ;
 
       assert.deepEqual(b, { a: 4, nested: { yes: 1 }, array: [{}, { yes: true }, {}] });
