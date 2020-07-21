@@ -4,7 +4,7 @@ var should = require('chai').should()
   , fs = require('fs')
   , path = require('path')
   , _ = require('underscore')
-  , async = require('async')
+  , [AsyncWaterfall, AsyncApply, AsyncEach] = [require('async/waterfall'), require('async/apply'), require('async/each')]
   , model = require('../lib/model')
   , Datastore = require('../lib/datastore')
   , Persistence = require('../lib/persistence')
@@ -20,7 +20,7 @@ describe('Database', function () {
     d.filename.should.equal(testDb);
     d.inMemoryOnly.should.equal(false);
 
-    async.waterfall([
+    AsyncWaterfall([
       function (cb) {
         Persistence.ensureDirectoryExists(path.dirname(testDb), function () {
           fs.exists(testDb, function (exists) {
@@ -643,7 +643,7 @@ describe('Database', function () {
   describe('Find', function () {
 
     it('Can find all documents if an empty query is used', function (done) {
-      async.waterfall([
+      AsyncWaterfall([
       function (cb) {
         d.insert({ somedata: 'ok' }, function (err) {
           d.insert({ somedata: 'another', plus: 'additional data' }, function (err) {
@@ -666,7 +666,7 @@ describe('Database', function () {
     });
 
     it('Can find all documents matching a basic query', function (done) {
-      async.waterfall([
+      AsyncWaterfall([
       function (cb) {
         d.insert({ somedata: 'ok' }, function (err) {
           d.insert({ somedata: 'again', plus: 'additional data' }, function (err) {
@@ -693,7 +693,7 @@ describe('Database', function () {
     });
 
     it('Can find one document matching a basic query and return null if none is found', function (done) {
-      async.waterfall([
+      AsyncWaterfall([
       function (cb) {
         d.insert({ somedata: 'ok' }, function (err) {
           d.insert({ somedata: 'again', plus: 'additional data' }, function (err) {
@@ -957,7 +957,7 @@ describe('Database', function () {
   describe('Count', function() {
 
     it('Count all documents if an empty query is used', function (done) {
-      async.waterfall([
+      AsyncWaterfall([
       function (cb) {
         d.insert({ somedata: 'ok' }, function (err) {
           d.insert({ somedata: 'another', plus: 'additional data' }, function (err) {
@@ -976,7 +976,7 @@ describe('Database', function () {
     });
 
     it('Count all documents matching a basic query', function (done) {
-      async.waterfall([
+      AsyncWaterfall([
       function (cb) {
         d.insert({ somedata: 'ok' }, function (err) {
           d.insert({ somedata: 'again', plus: 'additional data' }, function (err) {
@@ -1042,7 +1042,7 @@ describe('Database', function () {
   describe('Update', function () {
 
     it("If the query doesn't match anything, database is not modified", function (done) {
-      async.waterfall([
+      AsyncWaterfall([
       function (cb) {
         d.insert({ somedata: 'ok' }, function (err) {
           d.insert({ somedata: 'again', plus: 'additional data' }, function (err) {
@@ -1133,7 +1133,7 @@ describe('Database', function () {
       }
 
       // Actually launch the tests
-      async.waterfall([
+      AsyncWaterfall([
       function (cb) {
         d.insert({ somedata: 'ok' }, function (err, doc1) {
           id1 = doc1._id;
@@ -1153,11 +1153,11 @@ describe('Database', function () {
           return cb();
         });
       }
-      , async.apply(testPostUpdateState)
+      , AsyncApply(testPostUpdateState)
       , function (cb) {
         d.loadDatabase(function (err) { cb(err); });
       }
-      , async.apply(testPostUpdateState)
+      , AsyncApply(testPostUpdateState)
       ], done);
     });
 
@@ -1191,7 +1191,7 @@ describe('Database', function () {
       }
 
       // Actually launch the test
-      async.waterfall([
+      AsyncWaterfall([
       function (cb) {
         d.insert({ somedata: 'ok' }, function (err, doc1) {
           id1 = doc1._id;
@@ -1211,11 +1211,11 @@ describe('Database', function () {
           return cb();
         });
       }
-      , async.apply(testPostUpdateState)
+      , AsyncApply(testPostUpdateState)
       , function (cb) {
         d.loadDatabase(function (err) { return cb(err); });
       }
-      , async.apply(testPostUpdateState)   // The persisted state has been updated
+      , AsyncApply(testPostUpdateState)   // The persisted state has been updated
       ], done);
     });
 
@@ -1758,7 +1758,7 @@ describe('Database', function () {
       }
 
       // Actually launch the test
-      async.waterfall([
+      AsyncWaterfall([
       function (cb) {
         d.insert({ somedata: 'ok' }, function (err, doc1) {
           id1 = doc1._id;
@@ -1778,11 +1778,11 @@ describe('Database', function () {
           return cb();
         });
       }
-      , async.apply(testPostUpdateState)
+      , AsyncApply(testPostUpdateState)
       , function (cb) {
         d.loadDatabase(function (err) { return cb(err); });
       }
-      , async.apply(testPostUpdateState)
+      , AsyncApply(testPostUpdateState)
       ], done);
     });
 
@@ -1796,7 +1796,7 @@ describe('Database', function () {
 
               // Remove two docs simultaneously
               var toRemove = ['Mars', 'Saturn'];
-              async.each(toRemove, function(planet, cb) {
+              AsyncEach(toRemove, function(planet, cb) {
                 d.remove({ planet: planet }, function (err) { return cb(err); });
               }, function (err) {
                 d.find({}, function (err, docs) {

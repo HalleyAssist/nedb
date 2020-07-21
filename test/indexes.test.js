@@ -3,7 +3,7 @@ var Index = require('../lib/indexes')
   , should = require('chai').should()
   , assert = require('chai').assert
   , _ = require('underscore')
-  , async = require('async')
+  , [AsyncWaterfall, AsyncApply] = [require('async/waterfall'), require('async/apply')]
   , model = require('../lib/model')
   ;
 

@@ -1,10 +1,6 @@
 var should = require('chai').should()
   , assert = require('chai').assert
-  , fs = require('fs')
-  , path = require('path')
-  , _ = require('underscore')
-  , async = require('async')
-  , model = require('../lib/model')
+  , [AsyncWaterfall, AsyncApply] = [require('async/waterfall'), require('async/apply')]
   , Datastore = require('../lib/datastore');
 
 var closeDb = 'workspace/close.db';

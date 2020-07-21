@@ -4,8 +4,7 @@ var should = require('chai').should()
   , fs = require('fs')
   , path = require('path')
   , _ = require('underscore')
-  , async = require('async')
-  , model = require('../lib/model')
+  , [AsyncWaterfall, AsyncApply] = [require('async/waterfall'), require('async/apply')]
   , Datastore = require('../lib/datastore')
   , Persistence = require('../lib/persistence')
   ;
@@ -137,7 +136,7 @@ describe('Executor', function () {
       d.filename.should.equal(testDb);
       d.inMemoryOnly.should.equal(false);
 
-      async.waterfall([
+      AsyncWaterfall([
         function (cb) {
           Persistence.ensureDirectoryExists(path.dirname(testDb), function () {
             fs.exists(testDb, function (exists) {

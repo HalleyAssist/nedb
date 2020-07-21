@@ -1,8 +1,6 @@
 var Datastore = require('../lib/datastore')
   , benchDb = 'workspace/loaddb.bench.db'
-  , fs = require('fs')
-  , path = require('path')
-  , async = require('async')
+  , [AsyncWaterfall, AsyncApply] = [require('async/waterfall'), require('async/apply')]
   , commonUtilities = require('./commonUtilities')
   , execTime = require('exec-time')
   , profiler = new execTime('LOADDB BENCH')
@@ -23,14 +21,14 @@ console.log("Test with " + n + " documents");
 console.log(program.withIndex ? "Use an index" : "Don't use an index");
 console.log("----------------------------");
 
-async.waterfall([
-  async.apply(commonUtilities.prepareDb, benchDb)
+AsyncWaterfall([
+  AsyncApply(commonUtilities.prepareDb, benchDb)
 , function (cb) {
     d.loadDatabase(cb);
   }
 , function (cb) { profiler.beginProfiling(); return cb(); }
-, async.apply(commonUtilities.insertDocs, d, n, profiler)
-, async.apply(commonUtilities.loadDatabase, d, n, profiler)
+, AsyncApply(commonUtilities.insertDocs, d, n, profiler)
+, AsyncApply(commonUtilities.loadDatabase, d, n, profiler)
 ], function (err) {
   profiler.step("Benchmark finished");
 

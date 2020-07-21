@@ -5,7 +5,7 @@ var should = require('chai').should()
   , path = require('path')
   , os = require('os')
   , _ = require('underscore')
-  , async = require('async')
+  , [AsyncWaterfall, AsyncApply] = [require('async/waterfall'), require('async/apply')]
   , model = require('../lib/model')
   , customUtils = require('../lib/customUtils')
   , Datastore = require('../lib/datastore')
@@ -23,7 +23,7 @@ describe('Persistence', function () {
     d.filename.should.equal(testDb);
     d.inMemoryOnly.should.equal(false);
 
-    async.waterfall([
+    AsyncWaterfall([
       function (cb) {
         Persistence.ensureDirectoryExists(path.dirname(testDb), function () {
           fs.exists(testDb, function (exists) {
@@ -754,9 +754,9 @@ describe('Persistence', function () {
     it('Persistence works as expected when everything goes fine', function (done) {
       var dbFile = 'workspace/test2.db', theDb, theDb2, doc1, doc2;
 
-      async.waterfall([
-          async.apply(storage.ensureFileDoesntExist, dbFile)
-        , async.apply(storage.ensureFileDoesntExist, dbFile + '~')
+      AsyncWaterfall([
+          AsyncApply(storage.ensureFileDoesntExist, dbFile)
+        , AsyncApply(storage.ensureFileDoesntExist, dbFile + '~')
         , function (cb) {
           theDb = new Datastore({ filename: dbFile });
           theDb.loadDatabase(cb);

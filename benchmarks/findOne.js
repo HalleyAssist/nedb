@@ -1,8 +1,6 @@
 var Datastore = require('../lib/datastore')
   , benchDb = 'workspace/findOne.bench.db'
-  , fs = require('fs')
-  , path = require('path')
-  , async = require('async')
+  , [AsyncWaterfall, AsyncApply] = [require('async/waterfall'), require('async/apply')]
   , execTime = require('exec-time')
   , profiler = new execTime('FINDONE BENCH')
   , commonUtilities = require('./commonUtilities')
@@ -11,8 +9,8 @@ var Datastore = require('../lib/datastore')
   , n = config.n
   ;
 
-async.waterfall([
-  async.apply(commonUtilities.prepareDb, benchDb)
+AsyncWaterfall([
+  AsyncApply(commonUtilities.prepareDb, benchDb)
 , function (cb) {
     d.loadDatabase(function (err) {
       if (err) { return cb(err); }
@@ -21,9 +19,9 @@ async.waterfall([
     });
   }
 , function (cb) { profiler.beginProfiling(); return cb(); }
-, async.apply(commonUtilities.insertDocs, d, n, profiler)
+, AsyncApply(commonUtilities.insertDocs, d, n, profiler)
 , function (cb) { setTimeout(function () {cb();}, 500); }
-, async.apply(commonUtilities.findOneDocs, d, n, profiler)
+, AsyncApply(commonUtilities.findOneDocs, d, n, profiler)
 ], function (err) {
   profiler.step("Benchmark finished");
 

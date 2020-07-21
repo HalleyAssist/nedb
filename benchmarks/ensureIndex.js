@@ -1,6 +1,6 @@
 var Datastore = require('../lib/datastore')
   , benchDb = 'workspace/insert.bench.db'
-  , async = require('async')
+  , [AsyncWaterfall, AsyncApply] = [require('async/waterfall'), require('async/apply')]
   , commonUtilities = require('./commonUtilities')
   , execTime = require('exec-time')
   , profiler = new execTime('INSERT BENCH')
@@ -20,8 +20,8 @@ console.log("----------------------------");
 console.log("Test with " + n + " documents");
 console.log("----------------------------");
 
-async.waterfall([
-  async.apply(commonUtilities.prepareDb, benchDb)
+AsyncWaterfall([
+  AsyncApply(commonUtilities.prepareDb, benchDb)
 , function (cb) {
     d.loadDatabase(function (err) {
       if (err) { return cb(err); }
@@ -29,7 +29,7 @@ async.waterfall([
     });
   }
 , function (cb) { profiler.beginProfiling(); return cb(); }
-, async.apply(commonUtilities.insertDocs, d, n, profiler)
+, AsyncApply(commonUtilities.insertDocs, d, n, profiler)
 , function (cb) {
     var i;
 
