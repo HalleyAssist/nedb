@@ -282,6 +282,14 @@ describe('Model', function () {
       ;
 
       assert.deepEqual(b, { a: 4, nested: { yes: 1 }, array: [{}, { yes: true }, {}] });
+    });;
+
+    it('With the strictKeys option, $fn should not be copied', function () {
+      var a = { $fn: function(){} }
+        , b = model.deepCopyStrictKeys(a)
+      ;
+
+      assert.deepEqual(b, {});
     });
 
   });   // ==== End of 'Deep copying' ==== //
