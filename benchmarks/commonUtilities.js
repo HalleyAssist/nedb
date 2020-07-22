@@ -131,7 +131,7 @@ module.exports.findDocs = function (d, n, profiler, cb) {
       return cb();
     }
 
-    d.find({ docNumber: order[i] }, function (err, docs) {
+    d.find({ $fn: d=>d.docNumber==order[i] }, function (err, docs) {
       if (docs.length !== 1 || docs[0].docNumber !== order[i]) { return cb('One find didnt work'); }
       executeAsap(function () {
         runFrom(i + 1);
