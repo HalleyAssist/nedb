@@ -503,6 +503,7 @@ describe('Persistence', function () {
         ;
 
         d.insert({ hello: "world" }, function (err, doc) {
+          doc = doc[0]
           var _id = doc._id;
           d.insert({ yo: "ya" }, function () {
             d.update({ hello: "world" }, { $set: { hello: "earth" } }, {}, function () {
@@ -770,11 +771,12 @@ describe('Persistence', function () {
         }
       , function (cb) {
         theDb.insert({ a: 'hello' }, function (err, _doc1) {
+          _doc1 = _doc1[0]
         assert.isNull(err);
           doc1 = _doc1;
           theDb.insert({ a: 'world' }, function (err, _doc2) {
             assert.isNull(err);
-            doc2 = _doc2;
+            doc2 = _doc2[0];
             return cb();
           });
         });

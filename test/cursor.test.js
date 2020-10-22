@@ -445,11 +445,11 @@ describe('Cursor', function () {
             if (err) { return cb(err); }
 
             d.insert({ event: { recorded: new Date(400) } }, function (err, _doc1) {
-              doc1 = _doc1;
+              doc1 = _doc1[0];
               d.insert({ event: { recorded: new Date(60000) } }, function (err, _doc2) {
-                doc2 = _doc2;
+                doc2 = _doc2[0];;
                 d.insert({ event: { recorded: new Date(32) } }, function (err, _doc3) {
-                  doc3 = _doc3;
+                  doc3 = _doc3[0];;
                   return cb();
                 });
               });            
@@ -685,15 +685,15 @@ describe('Cursor', function () {
     beforeEach(function (done) {
       // We don't know the order in which docs wil be inserted but we ensure correctness by testing both sort orders
       d.insert({ age: 5, name: 'Jo', planet: 'B', toys: { bebe: true, ballon: 'much' } }, function (err, _doc0) {
-        doc0 = _doc0;
+        doc0 = _doc0[0];
         d.insert({ age: 57, name: 'Louis', planet: 'R', toys: { ballon: 'yeah', bebe: false } }, function (err, _doc1) {
-          doc1 = _doc1;
+          doc1 = _doc1[0];
           d.insert({ age: 52, name: 'Grafitti', planet: 'C', toys: { bebe: 'kind of' } }, function (err, _doc2) {
-            doc2 = _doc2;
+            doc2 = _doc2[0];
             d.insert({ age: 23, name: 'LM', planet: 'S' }, function (err, _doc3) {
-              doc3 = _doc3;
+              doc3 = _doc3[0];
               d.insert({ age: 89, planet: 'Earth' }, function (err, _doc4) {
-                doc4 = _doc4;
+                doc4 = _doc4[0];
                 return done();
               });
             });
