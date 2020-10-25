@@ -1,0 +1,14 @@
+name: Eslint
+on:
+  push:
+
+jobs:
+  check_eslint:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - name: Install modules
+      run: |
+        yarn global add eslint
+        echo "::add-path::$(yarn global bin)"
+    - run: eslint lib --ext .js,.jsx,.ts,.tsx
