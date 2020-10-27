@@ -1106,7 +1106,7 @@ describe('Model', function () {
         var d = new Date()
 
         function prep(w){
-          const ret = {$fn: model.prepare(w)}
+          const ret = {$prepared: model.prepare(w)}
           return ret
         }
         model.match({ test: true }, prep({ test: /true/ })).should.equal(false);
@@ -1123,7 +1123,7 @@ describe('Model', function () {
         const p = model.prepare({ test: /true/ }, false)
 
         function prep(w){
-          const ret = {$fn: m=>p(w, m)}
+          const ret = {$prepared: m=>p(w, m)}
           return ret
         }
         model.match({ test: true }, prep({ test: /true/ })).should.equal(false);
