@@ -1100,6 +1100,42 @@ describe('Model', function () {
     });
 
 
+    describe('Prepared match matching', function () {
+
+      it('Matching a prepared query', function () {
+        var d = new Date()
+
+        function prep(w){
+          const ret = {$prepared: model.prepare(w)}
+          return ret
+        }
+        model.match({ test: true }, prep({ test: /true/ })).should.equal(false);
+        model.match({ test: 'true' }, prep({ test: /true/ })).should.equal(true);
+        /*
+        model.match({ test: null }, { test: /null/ }).should.equal(false);
+        model.match({ test: 42 }, { test: /42/ }).should.equal(false);
+        model.match({ test: d }, { test: r }).should.equal(false);
+        */
+      });
+      it('Matching a prepared generic prepared query', function () {
+        var d = new Date()
+
+        const p = model.prepare({ test: /true/ }, false)
+
+        function prep(w){
+          const ret = {$prepared: m=>p(w, m)}
+          return ret
+        }
+        model.match({ test: true }, prep({ test: /true/ })).should.equal(false);
+        model.match({ test: 'true' }, prep({ test: /true/ })).should.equal(true);
+        /*
+        model.match({ test: null }, { test: /null/ }).should.equal(false);
+        model.match({ test: 42 }, { test: /42/ }).should.equal(false);
+        model.match({ test: d }, { test: r }).should.equal(false);
+        */
+      });
+    })
+
     describe('Regular expression matching', function () {
 
       it('Matching a non-string to a regular expression always yields false', function () {
