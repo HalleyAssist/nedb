@@ -24,9 +24,9 @@ describe('Indexes', function () {
 
       // The underlying BST now has 3 nodes which contain the docs where it's expected
       idx.tree.getNumberOfKeys().should.equal(3);
-      assert.deepEqual(idx.tree.search('hello'), [{ a: 5, tf: 'hello' }]);
-      assert.deepEqual(idx.tree.search('world'), [{ a: 8, tf: 'world' }]);
-      assert.deepEqual(idx.tree.search('bloup'), [{ a: 2, tf: 'bloup' }]);
+      assert.deepEqual([...idx.tree.search('hello')], [{ a: 5, tf: 'hello' }]);
+      assert.deepEqual([...idx.tree.search('world')], [{ a: 8, tf: 'world' }]);
+      assert.deepEqual([...idx.tree.search('bloup')], [{ a: 2, tf: 'bloup' }]);
 
       // The nodes contain pointers to the actual documents
       idx.tree.search('world')[0].should.equal(doc2);
@@ -79,9 +79,9 @@ describe('Indexes', function () {
 
       // The underlying BST now has 3 nodes which contain the docs where it's expected
       idx.tree.getNumberOfKeys().should.equal(3);
-      assert.deepEqual(idx.tree.search('hello'), [doc1]);
-      assert.deepEqual(idx.tree.search('world'), [doc2]);
-      assert.deepEqual(idx.tree.search('bloup'), [doc3]);
+      assert.deepEqual([...idx.tree.search('hello')], [doc1]);
+      assert.deepEqual([...idx.tree.search('world')], [doc2]);
+      assert.deepEqual([...idx.tree.search('bloup')], [doc3]);
 
       // The nodes contain pointers to the actual documents
       idx.tree.search('bloup')[0].a = 42;
@@ -97,9 +97,9 @@ describe('Indexes', function () {
 
       idx.insertMultipleDocs([doc1, doc2, doc3]);
       idx.tree.getNumberOfKeys().should.equal(3);
-      assert.deepEqual(idx.tree.search('hello'), [doc1]);
-      assert.deepEqual(idx.tree.search('world'), [doc2]);
-      assert.deepEqual(idx.tree.search('bloup'), [doc3]);
+      assert.deepEqual([...idx.tree.search('hello')], [doc1]);
+      assert.deepEqual([...idx.tree.search('world')], [doc2]);
+      assert.deepEqual([...idx.tree.search('bloup')], [doc3]);
     });
 
     it('When inserting an array of elements, if an error is thrown all inserts need to be rolled back', function () {
@@ -116,9 +116,9 @@ describe('Indexes', function () {
         e.errorType.should.equal('uniqueViolated');
       }
       idx.tree.getNumberOfKeys().should.equal(0);
-      assert.deepEqual(idx.tree.search('hello'), []);
-      assert.deepEqual(idx.tree.search('world'), []);
-      assert.deepEqual(idx.tree.search('bloup'), []);
+      assert.deepEqual([...idx.tree.search('hello')], []);
+      assert.deepEqual([...idx.tree.search('world')], []);
+      assert.deepEqual([...idx.tree.search('bloup')], []);
     });
 
 
@@ -301,9 +301,9 @@ describe('Indexes', function () {
       idx.tree.getNumberOfKeys().should.equal(3);
       idx.remove([doc1, doc3]);
       idx.tree.getNumberOfKeys().should.equal(1);
-      assert.deepEqual(idx.tree.search('hello'), []);
-      assert.deepEqual(idx.tree.search('world'), [doc2]);
-      assert.deepEqual(idx.tree.search('bloup'), []);
+      assert.deepEqual([...idx.tree.search('hello')], []);
+      assert.deepEqual([...idx.tree.search('world')], [doc2]);
+      assert.deepEqual([...idx.tree.search('bloup')], []);
     });
 
   });   // ==== End of 'Removal' ==== //
@@ -324,16 +324,16 @@ describe('Indexes', function () {
       idx.insert(doc2);
       idx.insert(doc3);
       idx.tree.getNumberOfKeys().should.equal(3);
-      assert.deepEqual(idx.tree.search('world'), [doc2]);
+      assert.deepEqual([...idx.tree.search('world')], [doc2]);
 
       idx.update(doc2, doc4);
       idx.tree.getNumberOfKeys().should.equal(3);
-      assert.deepEqual(idx.tree.search('world'), [doc4]);
+      assert.deepEqual([...idx.tree.search('world')], [doc4]);
 
       idx.update(doc1, doc5);
       idx.tree.getNumberOfKeys().should.equal(3);
-      assert.deepEqual(idx.tree.search('hello'), []);
-      assert.deepEqual(idx.tree.search('changed'), [doc5]);
+      assert.deepEqual([...idx.tree.search('hello')], []);
+      assert.deepEqual([...idx.tree.search('changed')], [doc5]);
     });
 
     it('If a simple update violates a unique constraint, changes are rolled back and an error thrown', function () {
@@ -349,9 +349,9 @@ describe('Indexes', function () {
       idx.insert(doc3);
 
       idx.tree.getNumberOfKeys().should.equal(3);
-      assert.deepEqual(idx.tree.search('hello'), [doc1]);
-      assert.deepEqual(idx.tree.search('world'), [doc2]);
-      assert.deepEqual(idx.tree.search('bloup'), [doc3]);
+      assert.deepEqual([...idx.tree.search('hello')], [doc1]);
+      assert.deepEqual([...idx.tree.search('world')], [doc2]);
+      assert.deepEqual([...idx.tree.search('bloup')], [doc3]);
 
       try {
         idx.update(doc3, bad);
@@ -361,9 +361,9 @@ describe('Indexes', function () {
 
       // No change
       idx.tree.getNumberOfKeys().should.equal(3);
-      assert.deepEqual(idx.tree.search('hello'), [doc1]);
-      assert.deepEqual(idx.tree.search('world'), [doc2]);
-      assert.deepEqual(idx.tree.search('bloup'), [doc3]);
+      assert.deepEqual([...idx.tree.search('hello')], [doc1]);
+      assert.deepEqual([...idx.tree.search('world')], [doc2]);
+      assert.deepEqual([...idx.tree.search('bloup')], [doc3]);
     });
 
     it('Can update an array of documents', function () {
@@ -450,11 +450,11 @@ describe('Indexes', function () {
       idx.insert(doc2);
       idx.insert(doc3);
       idx.tree.getNumberOfKeys().should.equal(3);
-      assert.deepEqual(idx.tree.search('world'), [doc2]);
+      assert.deepEqual([...idx.tree.search('world')], [doc2]);
 
       idx.update(doc2, noChange);   // No error thrown
       idx.tree.getNumberOfKeys().should.equal(3);
-      assert.deepEqual(idx.tree.search('world'), [noChange]);
+      assert.deepEqual([...idx.tree.search('world')], [noChange]);
     });
 
     it('Can revert simple and batch updates', function () {
@@ -533,9 +533,9 @@ describe('Indexes', function () {
       idx.insert(doc3);
       idx.insert(doc4);
 
-      assert.deepEqual(idx.getMatching('bloup'), [doc3]);
-      assert.deepEqual(idx.getMatching('world'), [doc2, doc4]);
-      assert.deepEqual(idx.getMatching('nope'), []);
+      assert.deepEqual([...idx.getMatching('bloup')], [doc3]);
+      assert.deepEqual([...idx.getMatching('world')], [doc2, doc4]);
+      assert.deepEqual([...idx.getMatching('nope')], []);
     });
 
     it('Can get all documents for a given key in a unique index', function () {
@@ -549,9 +549,9 @@ describe('Indexes', function () {
       idx.insert(doc2);
       idx.insert(doc3);
 
-      assert.deepEqual(idx.getMatching('bloup'), [doc3]);
-      assert.deepEqual(idx.getMatching('world'), [doc2]);
-      assert.deepEqual(idx.getMatching('nope'), []);
+      assert.deepEqual([...idx.getMatching('bloup')], [doc3]);
+      assert.deepEqual([...idx.getMatching('world')], [doc2]);
+      assert.deepEqual([...idx.getMatching('nope')], []);
     });
 
     it('Can get all documents for which a field is undefined', function () {
@@ -566,19 +566,19 @@ describe('Indexes', function () {
       idx.insert(doc2);
       idx.insert(doc3);
 
-      assert.deepEqual(idx.getMatching('bloup'), []);
-      assert.deepEqual(idx.getMatching('hello'), [doc1]);
-      assert.deepEqual(idx.getMatching('world'), [doc3]);
-      assert.deepEqual(idx.getMatching('yes'), []);
-      assert.deepEqual(idx.getMatching(undefined), [doc2]);
+      assert.deepEqual([...idx.getMatching('bloup')], []);
+      assert.deepEqual([...idx.getMatching('hello')], [doc1]);
+      assert.deepEqual([...idx.getMatching('world')], [doc3]);
+      assert.deepEqual([...idx.getMatching('yes')], []);
+      assert.deepEqual([...idx.getMatching(undefined)], [doc2]);
 
       idx.insert(doc4);
 
-      assert.deepEqual(idx.getMatching('bloup'), []);
-      assert.deepEqual(idx.getMatching('hello'), [doc1]);
-      assert.deepEqual(idx.getMatching('world'), [doc3]);
-      assert.deepEqual(idx.getMatching('yes'), []);
-      assert.deepEqual(idx.getMatching(undefined), [doc2, doc4]);
+      assert.deepEqual([...idx.getMatching('bloup')], []);
+      assert.deepEqual([...idx.getMatching('hello')], [doc1]);
+      assert.deepEqual([...idx.getMatching('world')], [doc3]);
+      assert.deepEqual([...idx.getMatching('yes')], []);
+      assert.deepEqual([...idx.getMatching(undefined)], [doc2, doc4]);
     });
 
     it('Can get all documents for which a field is null', function () {
@@ -593,19 +593,19 @@ describe('Indexes', function () {
       idx.insert(doc2);
       idx.insert(doc3);
 
-      assert.deepEqual(idx.getMatching('bloup'), []);
-      assert.deepEqual(idx.getMatching('hello'), [doc1]);
-      assert.deepEqual(idx.getMatching('world'), [doc3]);
-      assert.deepEqual(idx.getMatching('yes'), []);
-      assert.deepEqual(idx.getMatching(null), [doc2]);
+      assert.deepEqual([...idx.getMatching('bloup')], []);
+      assert.deepEqual([...idx.getMatching('hello')], [doc1]);
+      assert.deepEqual([...idx.getMatching('world')], [doc3]);
+      assert.deepEqual([...idx.getMatching('yes')], []);
+      assert.deepEqual([...idx.getMatching(null)], [doc2]);
 
       idx.insert(doc4);
 
-      assert.deepEqual(idx.getMatching('bloup'), []);
-      assert.deepEqual(idx.getMatching('hello'), [doc1]);
-      assert.deepEqual(idx.getMatching('world'), [doc3]);
-      assert.deepEqual(idx.getMatching('yes'), []);
-      assert.deepEqual(idx.getMatching(null), [doc2, doc4]);
+      assert.deepEqual([...idx.getMatching('bloup')], []);
+      assert.deepEqual([...idx.getMatching('hello')], [doc1]);
+      assert.deepEqual([...idx.getMatching('world')], [doc3]);
+      assert.deepEqual([...idx.getMatching('yes')], []);
+      assert.deepEqual([...idx.getMatching(null)], [doc2, doc4]);
     });
 
     it('Can get all documents for a given key in a sparse index, but not unindexed docs (= field undefined)', function () {
@@ -621,11 +621,11 @@ describe('Indexes', function () {
       idx.insert(doc3);
       idx.insert(doc4);
 
-      assert.deepEqual(idx.getMatching('bloup'), []);
-      assert.deepEqual(idx.getMatching('hello'), [doc1]);
-      assert.deepEqual(idx.getMatching('world'), [doc3]);
-      assert.deepEqual(idx.getMatching('yes'), []);
-      assert.deepEqual(idx.getMatching(undefined), []);
+      assert.deepEqual([...idx.getMatching('bloup')], []);
+      assert.deepEqual([...idx.getMatching('hello')], [doc1]);
+      assert.deepEqual([...idx.getMatching('world')], [doc3]);
+      assert.deepEqual([...idx.getMatching('yes')], []);
+      assert.deepEqual([...idx.getMatching(undefined)], []);
     });
 
     it('Can get all documents whose key is in an array of keys', function () {
@@ -647,11 +647,11 @@ describe('Indexes', function () {
       idx.insert(doc4);
       idx.insert(doc5);
 
-      assert.deepEqual(idx.getMatching([]), []);
-      assert.deepEqual(idx.getMatching(['bloup']), [doc2]);
-      assert.deepEqual(idx.getMatching(['bloup', 'yes']), [doc2, doc4, doc5]);
-      assert.deepEqual(idx.getMatching(['hello', 'no']), [doc1]);
-      assert.deepEqual(idx.getMatching(['nope', 'no']), []);
+      assert.deepEqual([...idx.getMatching([])], []);
+      assert.deepEqual([...idx.getMatching(['bloup'])], [doc2]);
+      assert.deepEqual([...idx.getMatching(['bloup', 'yes'])], [doc2, doc4, doc5]);
+      assert.deepEqual([...idx.getMatching(['hello', 'no'])], [doc1]);
+      assert.deepEqual([...idx.getMatching(['nope', 'no'])], []);
     });
 
     it('Can get all documents whose key is between certain bounds', function () {
