@@ -2233,11 +2233,11 @@ describe('Database', function () {
 
         d.insert({ a: 2, z: 'yes' }, function (err, newDoc) {
           d.indexes.z.tree.getNumberOfKeys().should.equal(1);
-          assert.deepEqual(d.indexes.z.getMatching('yes'), newDoc);
+          assert.deepEqual([...d.indexes.z.getMatching('yes')], newDoc);
 
           d.insert({ a: 5, z: 'nope' }, function (err, newDoc) {
             d.indexes.z.tree.getNumberOfKeys().should.equal(2);
-            assert.deepEqual(d.indexes.z.getMatching('nope'), newDoc);
+            assert.deepEqual([...d.indexes.z.getMatching('nope')], newDoc);
 
             done();
           });
@@ -2252,14 +2252,14 @@ describe('Database', function () {
         d.insert({ a: 2, z: 'yes', ya: 'indeed' }, function (err, newDoc) {
           d.indexes.z.tree.getNumberOfKeys().should.equal(1);
           d.indexes.ya.tree.getNumberOfKeys().should.equal(1);
-          assert.deepEqual(d.indexes.z.getMatching('yes'), newDoc);
-          assert.deepEqual(d.indexes.ya.getMatching('indeed'), newDoc);
+          assert.deepEqual([...d.indexes.z.getMatching('yes')], newDoc);
+          assert.deepEqual([...d.indexes.ya.getMatching('indeed')], newDoc);
 
           d.insert({ a: 5, z: 'nope', ya: 'sure' }, function (err, newDoc2) {
             d.indexes.z.tree.getNumberOfKeys().should.equal(2);
             d.indexes.ya.tree.getNumberOfKeys().should.equal(2);
-            assert.deepEqual(d.indexes.z.getMatching('nope'), newDoc2);
-            assert.deepEqual(d.indexes.ya.getMatching('sure'), newDoc2);
+            assert.deepEqual([...d.indexes.z.getMatching('nope')], newDoc2);
+            assert.deepEqual([...d.indexes.ya.getMatching('sure')], newDoc2);
 
             done();
           });
@@ -2272,11 +2272,11 @@ describe('Database', function () {
 
         d.insert({ a: 2, z: 'yes' }, function (err, newDoc) {
           d.indexes.z.tree.getNumberOfKeys().should.equal(1);
-          assert.deepEqual(d.indexes.z.getMatching('yes'), newDoc);
+          assert.deepEqual([...d.indexes.z.getMatching('yes')], newDoc);
 
           d.insert({ a: 5, z: 'yes' }, function (err, newDoc2) {
             d.indexes.z.tree.getNumberOfKeys().should.equal(1);
-            assert.deepEqual(d.indexes.z.getMatching('yes'), newDoc.concat(newDoc2));
+            assert.deepEqual([...d.indexes.z.getMatching('yes')], newDoc.concat(newDoc2));
 
             done();
           });
@@ -2290,7 +2290,7 @@ describe('Database', function () {
         d.insert({ a: 2, z: 'yes' }, function (err, newDoc) {
           newDoc = newDoc[0]
           d.indexes.z.tree.getNumberOfKeys().should.equal(1);
-          assert.deepEqual(d.indexes.z.getMatching('yes'), [newDoc]);
+          assert.deepEqual([...d.indexes.z.getMatching('yes')], [newDoc]);
 
           d.insert({ a: 5, z: 'yes' }, function (err) {
             err.errorType.should.equal('uniqueViolated');
@@ -2298,7 +2298,7 @@ describe('Database', function () {
 
             // Index didn't change
             d.indexes.z.tree.getNumberOfKeys().should.equal(1);
-            assert.deepEqual(d.indexes.z.getMatching('yes'), [newDoc]);
+            assert.deepEqual([...d.indexes.z.getMatching('yes')], [newDoc]);
 
             // Data didn't change
             assert.deepEqual(d.getAllData(), [newDoc]);
@@ -2331,9 +2331,9 @@ describe('Database', function () {
             d.indexes.uni.tree.getNumberOfKeys().should.equal(1);
             d.indexes.nonu2.tree.getNumberOfKeys().should.equal(1);
 
-            assert.deepEqual(d.indexes.nonu1.getMatching('yes'), newDoc);
-            assert.deepEqual(d.indexes.uni.getMatching('willfail'), newDoc);
-            assert.deepEqual(d.indexes.nonu2.getMatching('yes2'), newDoc);
+            assert.deepEqual([...d.indexes.nonu1.getMatching('yes')], newDoc);
+            assert.deepEqual([...d.indexes.uni.getMatching('willfail')], newDoc);
+            assert.deepEqual([...d.indexes.nonu2.getMatching('yes2')], newDoc);
 
             done();
           });
@@ -2346,7 +2346,7 @@ describe('Database', function () {
 
         d.insert({ a: 2, z: 'yes' }, function (err, newDoc) {
           d.indexes.zzz.tree.getNumberOfKeys().should.equal(1);
-          assert.deepEqual(d.indexes.zzz.getMatching(undefined), newDoc);
+          assert.deepEqual([...d.indexes.zzz.getMatching(undefined)], newDoc);
 
           d.insert({ a: 5, z: 'other' }, function (err) {
             err.errorType.should.equal('uniqueViolated');
