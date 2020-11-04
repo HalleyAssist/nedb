@@ -6,7 +6,7 @@ var should = require('chai').should()
   , _ = require('underscore')
   , [AsyncWaterfall, AsyncApply] = [require('async/waterfall'), require('async/apply')]
   , Datastore = require('../lib/datastore')
-  , Persistence = require('../lib/persistence')
+  , Persistence = require('../lib/storage/onDisk')
   ;
 
 

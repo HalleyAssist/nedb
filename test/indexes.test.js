@@ -1,5 +1,5 @@
-var Index = require('../lib/index')
-  , NumberIndex = require('../lib/numberIndex')
+var Index = require('../lib/indexes/bstIndex')
+  , NumberIndex = require('../lib/indexes/numberIndex')
   , customUtils = require('../lib/customUtils')
   , should = require('chai').should()
   , assert = require('chai').assert

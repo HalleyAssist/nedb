@@ -7,7 +7,7 @@ var should = require('chai').should()
   , [AsyncWaterfall, AsyncApply, AsyncEach] = [require('async/waterfall'), require('async/apply'), require('async/each')]
   , model = require('../lib/model')
   , Datastore = require('../lib/datastore')
-  , Persistence = require('../lib/persistence')
+  , Persistence = require('../lib/storage/onDisk')
   , reloadTimeUpperBound = 60;   // In ms, an upper bound for the reload time used to check createdAt and updatedAt
   ;
 

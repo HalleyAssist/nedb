@@ -7,7 +7,7 @@ var should = require('chai').should()
   , [AsyncWaterfall, AsyncEach] = [require('async/waterfall'), require('async/each')]
   , model = require('../lib/model')
   , Datastore = require('../lib/datastore')
-  , Persistence = require('../lib/persistence')
+  , Persistence = require('../lib/storage/onDisk')
   , Cursor = require('../lib/cursor')
   ;
 

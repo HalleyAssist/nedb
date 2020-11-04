@@ -9,13 +9,13 @@ var should = require('chai').should()
   , model = require('../lib/model')
   , customUtils = require('../lib/customUtils')
   , Datastore = require('../lib/datastore')
-  , Persistence = require('../lib/persistence')
+  , Persistence = require('../lib/storage/onDisk')
   , storage = require('../lib/storage')
   , child_process = require('child_process')
 ;
 
 
-describe('Persistence', function () {
+describe('Storage', function () {
   var d;
 
   beforeEach(function (done) {
@@ -554,7 +554,7 @@ describe('Persistence', function () {
     })
 
     it('If no file exists, ensureDatafileIntegrity creates an empty datafile', function (done) {
-      var p = new Persistence({ db: { inMemoryOnly: false, filename: 'workspace/it.db' } });
+      var p = new Persistence({ db: { filename: 'workspace/it.db' } });
 
       if (fs.existsSync('workspace/it.db')) { fs.unlinkSync('workspace/it.db'); }
       if (fs.existsSync('workspace/it.db~')) { fs.unlinkSync('workspace/it.db~'); }
@@ -575,7 +575,7 @@ describe('Persistence', function () {
     });
 
     it('If only datafile exists, ensureDatafileIntegrity will use it', function (done) {
-      var p = new Persistence({ db: { inMemoryOnly: false, filename: 'workspace/it.db' } });
+      var p = new Persistence({ db: { filename: 'workspace/it.db' } });
 
       if (fs.existsSync('workspace/it.db')) { fs.unlinkSync('workspace/it.db'); }
       if (fs.existsSync('workspace/it.db~')) { fs.unlinkSync('workspace/it.db~'); }
@@ -598,7 +598,7 @@ describe('Persistence', function () {
     });
 
     it('If temp datafile exists and datafile doesnt, ensureDatafileIntegrity will use it (cannot happen except upon first use)', function (done) {
-      var p = new Persistence({ db: { inMemoryOnly: false, filename: 'workspace/it.db' } });
+      var p = new Persistence({ db: { filename: 'workspace/it.db' } });
 
       if (fs.existsSync('workspace/it.db')) { fs.unlinkSync('workspace/it.db'); }
       if (fs.existsSync('workspace/it.db~')) { fs.unlinkSync('workspace/it.db~~'); }
