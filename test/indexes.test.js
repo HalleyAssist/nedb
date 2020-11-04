@@ -359,6 +359,30 @@ describe('Indexes', function () {
       assert.deepEqual([...idx.tree.search('hello')], []);
       assert.deepEqual([...idx.tree.search('changed')], [doc5]);
     });
+    it('Can update a document whose key did or didnt change with NumberIndex', function () {
+      var idx = new NumberIndex({ fieldName: 'a', type: 'int' })
+        , doc1 = { a: 5, tf: 'hello' }
+        , doc2 = { a: 8, tf: 'world' }
+        , doc3 = { a: 2, tf: 'bloup' }
+        , doc4 = { a: 23, tf: 'world' }
+        , doc5 = { a: 5, tf: 'changed' }
+        ;
+
+      idx.insert(doc1);
+      idx.insert(doc2);
+      idx.insert(doc3);
+      idx.tree.getNumberOfKeys().should.equal(3);
+      assert.deepEqual([...idx.tree.search(8)], [doc2]);
+
+      idx.update(doc2, doc4);
+      idx.tree.getNumberOfKeys().should.equal(3);
+      assert.deepEqual([...idx.tree.search(23)], [doc4]);
+      assert.deepEqual([...idx.tree.search(8)], []);
+
+      idx.update(doc1, doc5);
+      idx.tree.getNumberOfKeys().should.equal(3);
+      assert.deepEqual([...idx.tree.search(5)], [doc5]);
+    });
 
     it('If a simple update violates a unique constraint, changes are rolled back and an error thrown', function () {
       var idx = new Index({ fieldName: 'tf', unique: true })
