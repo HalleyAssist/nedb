@@ -1,4 +1,5 @@
-var Index = require('../lib/indexes')
+var Index = require('../lib/index')
+  , NumberIndex = require('../lib/numberIndex')
   , customUtils = require('../lib/customUtils')
   , should = require('chai').should()
   , assert = require('chai').assert
@@ -31,6 +32,29 @@ describe('Indexes', function () {
       // The nodes contain pointers to the actual documents
       idx.tree.search('world')[0].should.equal(doc2);
       idx.tree.search('bloup')[0].a = 42;
+      doc3.a.should.equal(42);
+    });
+
+    it('Should be able to handle a NumberIndex', function () {
+      var idx = new NumberIndex({ fieldName: 'a', type: 'int' })
+        , doc1 = { a: 5, tf: 'hello' }
+        , doc2 = { a: 8, tf: 'world' }
+        , doc3 = { a: 2, tf: 'bloup' }
+        ;
+
+      idx.insert(doc1);
+      idx.insert(doc2);
+      idx.insert(doc3);
+
+      // The underlying BST now has 3 nodes which contain the docs where it's expected
+      idx.tree.getNumberOfKeys().should.equal(3);
+      assert.deepEqual([...idx.tree.search(5)], [{ a: 5, tf: 'hello' }]);
+      assert.deepEqual([...idx.tree.search(8)], [{ a: 8, tf: 'world' }]);
+      assert.deepEqual([...idx.tree.search(2)], [{ a: 2, tf: 'bloup' }]);
+
+      // The nodes contain pointers to the actual documents
+      idx.tree.search(8)[0].should.equal(doc2);
+      idx.tree.search(2)[0].a = 42;
       doc3.a.should.equal(42);
     });
 

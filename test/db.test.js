@@ -1997,6 +1997,36 @@ describe('Database', function () {
           });
         });
       });
+
+      
+      it('ensureIndex should be able to create a NumberIndex', function (done) {
+        var now = new Date()
+          , rawData = model.serialize({ _id: "aaa", z: "1", a: 2, ages: [1, 5, 12] }) + '\n' +
+                      model.serialize({ _id: "bbb", z: 2, hello: 'world' }) + '\n' +
+                      model.serialize({ _id: "ccc", z: "3", nested: { today: now } })
+          ;
+
+        d.getAllData().length.should.equal(0);
+
+        fs.writeFile(testDb, rawData, 'utf8', function () {
+          d.loadDatabase(function () {
+            d.getAllData().length.should.equal(3);
+
+            assert.deepEqual(Object.keys(d.indexes), ['_id']);
+
+            d.ensureIndex({ fieldName: 'z', type: 'int' });
+            d.indexes.z.fieldName.should.equal('z');
+            d.indexes.z.constructor.name.should.equal('NumberIndex')
+            d.indexes.z.unique.should.equal(false);
+            d.indexes.z.sparse.should.equal(false);
+            d.indexes.z.tree.getNumberOfKeys().should.equal(3);
+            d.indexes.z.tree.search('1')[0].should.equal(d.getAllData()[0]);
+            d.indexes.z.tree.search('2')[0].should.equal(d.getAllData()[1]);
+            d.indexes.z.tree.search(3)[0].should.equal(d.getAllData()[2]);
+            done();
+          });
+        });
+      });
       
       it('ensureIndex can be called twice on the same field, the second call will ahve no effect', function (done) {
         Object.keys(d.indexes).length.should.equal(1);
