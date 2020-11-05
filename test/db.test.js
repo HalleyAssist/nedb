@@ -606,7 +606,8 @@ describe('Database', function () {
             setTimeout(function () {
               d.indexes._id.getAll().length.should.equal(1)
 
-              d.cleanupExpired(function (dd) {
+              d.cleanupExpired(function (err, dd) {
+                assert.isNull(err)
                 assert.isTrue(dd);
                 
                 
