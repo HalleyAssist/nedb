@@ -554,103 +554,132 @@ describe('Database', function () {
       });
     });
 
-    it("Can set a TTL index that expires documents", function (done) {
-      d.ensureIndex({ fieldName: 'exp', expireAfterSeconds: 0.2 }, function () {
-        d.insert({ hello: 'world', exp: new Date() }, function () {
-          setTimeout(function () {
-            d.findOne({}, function (err, doc) {
-              assert.isNull(err);
-              doc.hello.should.equal('world');
+    it("Can set a TTL that expires documents", function (done) {
+      d.expired = function(doc, now){
+        return doc.exp < now
+      }
+      d.insert({ hello: 'world', exp: Date.now()+200 }, function () {
+        setTimeout(function () {
+          d.findOne({}, function (err, doc) {
+            assert.isNull(err);
+            doc.hello.should.equal('world');
 
-              setTimeout(function () {
-                d.findOne({}, function (err, doc) {
-                  assert.isNull(err);
-                  assert.isNull(doc);
+            setTimeout(function () {
+              d.findOne({}, function (err, doc) {
+                assert.isNull(err);
+                assert.isNull(doc);
 
-                  d.on('compaction.done', function () {
-                    // After compaction, no more mention of the document, correctly removed
-                    var datafileContents = fs.readFileSync(testDb, 'utf8');
-                    datafileContents.split('\n').length.should.equal(2);
-                    assert.isNull(datafileContents.match(/world/));
+                d.on('compaction.done', function () {
+                  // After compaction, no more mention of the document, correctly removed
+                  var datafileContents = fs.readFileSync(testDb, 'utf8');
+                  datafileContents.split('\n').length.should.equal(1);
+                  assert.isNull(datafileContents.match(/world/));
 
-                    // New datastore on same datafile is empty
-                    var d2 = new Datastore({ filename: testDb, autoload: true });
-                    d2.findOne({}, function (err, doc) {
-                      assert.isNull(err);
-                      assert.isNull(doc);
+                  // New datastore on same datafile is empty
+                  var d2 = new Datastore({ filename: testDb, autoload: true });
+                  d2.findOne({}, function (err, doc) {
+                    assert.isNull(err);
+                    assert.isNull(doc);
 
-                      done();
-                    });
+                    done();
                   });
-
-                  d.persistence.compactDatafile();
                 });
-              }, 101);
-            });
-          }, 100);
-        });
+
+                d.persistence.compactDatafile();
+              });
+            }, 101);
+          });
+        }, 100);
       });
     });
 
-    it("TTL indexes can expire multiple documents and only what needs to be expired", function (done) {
-      d.ensureIndex({ fieldName: 'exp', expireAfterSeconds: 0.2 }, function () {
-        d.insert({ hello: 'world1', exp: new Date() }, function () {
-          d.insert({ hello: 'world2', exp: new Date() }, function () {
-            d.insert({ hello: 'world3', exp: new Date((new Date()).getTime() + 100) }, function () {
-              setTimeout(function () {
-                d.find({}, function (err, docs) {
-                  assert.isNull(err);
-                  docs.length.should.equal(3);
+    it("cleanup can expire documents", function (done) {
+      d.expired = function(doc, now){
+        return doc.exp < now
+      }
+      d.insert({ hello: 'world', exp: Date.now()+200 }, function () {
+        setTimeout(function () {
+          d.findOne({}, function (err, doc) {
+            assert.isNull(err);
+            doc.hello.should.equal('world');
 
-                  setTimeout(function () {
-                    d.find({}, function (err, docs) {
-                      assert.isNull(err);
-                      docs.length.should.equal(1);
-                      docs[0].hello.should.equal('world3');
+            setTimeout(function () {
+              d.indexes._id.getAll().length.should.equal(1)
 
-                      setTimeout(function () {
-                        d.find({}, function (err, docs) {
-                          assert.isNull(err);
-                          docs.length.should.equal(0);
+              d.cleanupExpired(function (dd) {
+                assert.isTrue(dd);
+                
+                
+                d.indexes._id.getAll().length.should.equal(0)
+                done()
+              });
+            }, 101);
+          });
+        }, 100);
+      });
+    });
 
-                          done();
-                        });
-                      }, 101);
-                    });
-                  }, 101);
-                });
-              }, 100);
-            });
+    it("TTL can expire multiple documents and only what needs to be expired", function (done) {
+      d.expired = function(doc, now){
+        return doc.exp < now
+      }
+      d.insert({ hello: 'world1', exp: Date.now()+200 }, function () {
+        d.insert({ hello: 'world2', exp: Date.now()+200 }, function () {
+          d.insert({ hello: 'world3', exp: Date.now()+100 }, function () {
+            setTimeout(function () {
+              d.find({}, function (err, docs) {
+                assert.isNull(err);
+                docs.length.should.equal(3);
+
+                setTimeout(function () {
+                  d.find({}, function (err, docs) {
+                    assert.isNull(err);
+                    docs.length.should.equal(2);
+                    docs[0].hello.should.equal('world1');
+
+                    setTimeout(function () {
+                      d.find({}, function (err, docs) {
+                        assert.isNull(err);
+                        docs.length.should.equal(0);
+
+                        done();
+                      });
+                    }, 101);
+                  });
+                }, 90);
+              });
+            }, 90);
           });
         });
       });
     });
 
-    it("Document where indexed field is absent or not a date are ignored", function (done) {
-      d.ensureIndex({ fieldName: 'exp', expireAfterSeconds: 0.2 }, function () {
-        d.insert({ hello: 'world1', exp: new Date() }, function () {
-          d.insert({ hello: 'world2', exp: "not a date" }, function () {
-            d.insert({ hello: 'world3' }, function () {
-              setTimeout(function () {
-                d.find({}, function (err, docs) {
-                  assert.isNull(err);
-                  docs.length.should.equal(3);
+    it("Document where indexed field is absent are ignored", function (done) {
+      d.expired = function(doc, now){
+        return doc.exp !== undefined && doc.exp < now
+      }
+      d.insert({ hello: 'world1', exp: Date.now() }, function () {
+        d.insert({ hello: 'world2', exp: undefined }, function () {
+          d.insert({ hello: 'world3' }, function () {
+            setTimeout(function () {
+              d.find({}, function (err, docs) {
+                assert.isNull(err);
+                docs.length.should.equal(2);
 
-                  setTimeout(function () {
-                    d.find({}, function (err, docs) {
-                      assert.isNull(err);
-                      docs.length.should.equal(2);
+                setTimeout(function () {
+                  d.find({}, function (err, docs) {
+                    assert.isNull(err);
+                    docs.length.should.equal(2);
 
 
-                      docs[0].hello.should.not.equal('world1');
-                      docs[1].hello.should.not.equal('world1');
+                    docs[0].hello.should.not.equal('world1');
+                    docs[1].hello.should.not.equal('world1');
 
-                      done();
-                    });
-                  }, 101);
-                });
-              }, 100);
-            });
+                    done();
+                  });
+                }, 101);
+              });
+            }, 100);
           });
         });
       });
