@@ -505,13 +505,17 @@ describe('Database', function () {
               d.insert({ tf: 9 }, function (err, _doc4) {
                 _doc4 = _doc4[0]
                 d.getCandidates({ r: 6, notf: { $in: [6, 9, 5] } }, function (err, data) {
+                  data = [...data]
                   var doc1 = _.find(data, function (d) { return d._id === _doc1._id; })
                     , doc2 = _.find(data, function (d) { return d._id === _doc2._id; })
                     , doc3 = _.find(data, function (d) { return d._id === _doc3._id; })
                     , doc4 = _.find(data, function (d) { return d._id === _doc4._id; })
                     ;
 
-                  data.length.should.equal(4);
+                  
+                  assert.isNull(err);
+                
+                  [...data].length.should.equal(4);
                   assert.deepEqual(doc1, { _id: doc1._id, tf: 4 });
                   assert.deepEqual(doc2, { _id: doc2._id, tf: 6 });
                   assert.deepEqual(doc3, { _id: doc3._id, tf: 4, an: 'other' });
@@ -541,7 +545,7 @@ describe('Database', function () {
                     , doc4 = _.find(data, function (d) { return d._id === _doc4._id; })
                     ;
 
-                  data.length.should.equal(2);
+                  [...data].length.should.equal(2);
                   assert.deepEqual(doc2, { _id: doc2._id, tf: 6 });
                   assert.deepEqual(doc4, { _id: doc4._id, tf: 9 });
 
@@ -1285,7 +1289,7 @@ describe('Database', function () {
           d.find({}, function (err, docs) {
             docs.length.should.equal(0);   // Default option for upsert is false
 
-            d.update({ impossible: 'db is empty anyway' }, { something: "created ok" }, { upsert: true }, function (err, nr, newDoc) {
+            d.upsert({ impossible: 'db is empty anyway' }, { something: "created ok" }, { }, function (err, nr, newDoc) {
               assert.isNull(err);
               nr.should.equal(1);
               newDoc = newDoc[0]
@@ -1311,7 +1315,7 @@ describe('Database', function () {
       });
       
       it('If the update query is a normal object with no modifiers, it is the doc that will be upserted', function (done) {
-        d.update({ $or: [{ a: 4 }, { a: 5 }] }, { hello: 'world', bloup: 'blap' }, { upsert: true }, function (err) {
+        d.upsert({ $or: [{ a: 4 }, { a: 5 }] }, { hello: 'world', bloup: 'blap' }, { }, function (err) {
           d.find({}, function (err, docs) {
             assert.isNull(err);
             docs.length.should.equal(1);
@@ -1325,7 +1329,7 @@ describe('Database', function () {
       });
       
       it('If the update query contains modifiers, it is applied to the object resulting from removing all operators from the find query 1', function (done) {
-        d.update({ $or: [{ a: 4 }, { a: 5 }] }, { $set: { hello: 'world' }, $inc: { bloup: 3 } }, { upsert: true }, function (err) {
+        d.upsert({ $or: [{ a: 4 }, { a: 5 }] }, { $set: { hello: 'world' }, $inc: { bloup: 3 } }, { }, function (err) {
           d.find({ hello: 'world' }, function (err, docs) {
             assert.isNull(err);
             docs.length.should.equal(1);
@@ -1339,7 +1343,7 @@ describe('Database', function () {
       });
       
       it('If the update query contains modifiers, it is applied to the object resulting from removing all operators from the find query 2', function (done) {
-        d.update({ $or: [{ a: 4 }, { a: 5 }], cac: 'rrr' }, { $set: { hello: 'world' }, $inc: { bloup: 3 } }, { upsert: true }, function (err) {
+        d.upsert({ $or: [{ a: 4 }, { a: 5 }], cac: 'rrr' }, { $set: { hello: 'world' }, $inc: { bloup: 3 } }, { }, function (err) {
           d.find({ hello: 'world' }, function (err, docs) {
             assert.isNull(err);
             docs.length.should.equal(1);
@@ -1354,7 +1358,7 @@ describe('Database', function () {
       });
       
       it('Performing upsert with badly formatted fields yields a standard error not an exception', function(done) {
-        d.update({_id: '1234'}, { $set: { $$badfield: 5 }}, { upsert: true }, function(err, doc) {
+        d.upsert({_id: '1234'}, { $set: { $$badfield: 5 }}, { }, function(err, doc) {
           assert.isDefined(err);
           done();
         })
@@ -1408,7 +1412,7 @@ describe('Database', function () {
     });
 
     it('Can upsert a document even with modifiers', function (done) {
-      d.update({ bloup: 'blap' }, { $set: { hello: 'world' } }, { upsert: true }, function (err, nr, newDoc) {
+      d.upsert({ bloup: 'blap' }, { $set: { hello: 'world' } }, { }, function (err, nr, newDoc) {
         assert.isNull(err);
         nr.should.equal(1);
         newDoc = newDoc[0]
@@ -1790,7 +1794,7 @@ describe('Database', function () {
           assert.isUndefined(upsert);
 
           // Upsert flag set
-          d.update({ a: 3 }, { $set: { b: 21 } }, { upsert: true }, function (err, numAffected, affectedDocuments, upsert) {
+          d.upsert({ a: 3 }, { $set: { b: 21 } }, { }, function (err, numAffected, affectedDocuments, upsert) {
             assert.isNull(err);
             numAffected.should.equal(1);
             affectedDocuments = affectedDocuments[0]
